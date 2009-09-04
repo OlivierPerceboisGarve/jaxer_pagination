@@ -1,0 +1,215 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Pagination using activejs and jquery</title>
+	  	<style type="text/css">
+	  		body, a{font-size: 70%; font: 8px Arial, Helvetica sans-serif;}
+	  		ul.ui-paginated{list-style-type: none; padding: 0; width: 250px;  border: 1px solid #f0f0f0;}
+			#col1, #col2, #col3{float: left;}
+			ul.ui-paginated li{margin: 1px; border: 1px solid #ccc;}
+			ul.ui-paginated h2 {font-size: 10px; margin: 0; padding: 0;}
+			.ui-paginated-nav{width: 250px;position: relative;}
+			.ui-paginated-nav .ui-pager>div{display: block; position: relative; overflow: hidden; height: 20px; width: 100%; clear: right;}
+			.ui-paginated-nav .ui-pager>div>*{}
+			.ui-paginated-nav .ui-pager a.previous{position: absolute; display: block; left: 0; width: 55px;}
+			.ui-paginated-nav .ui-pager a.next{position: absolute; right: 0; width: 55px; text-align: right;}
+			.ui-paginated-nav .ui-pager .startpoints{position: absolute; left: 55px;}
+			.ui-paginated-nav .ui-pager .endpoints{position: absolute; right: 55px;}
+			/* IE */
+			ul.ui-paginated{margin-left: 0}
+	  	</style>
+		<script type="text/javascript" src="active.js" runat="both" autoload="true"></script>
+		<script type="text/javascript" src="jquery-1.3.2.js" runat="both"></script>
+		<script type="text/javascript" src="jquery.profile.js" runat="both" autoload="true"></script>
+		<script type="text/javascript" src="jquery.parseQuery.js" runat="both"></script>
+		<script type="text/javascript" src="jquery.parseUri.js" runat="both"></script>
+		<script type="text/javascript" src="jquery.domToSelector.js" runat="both"></script>
+		<script type="text/javascript" src="jquery.history.js" runat="client"></script>
+		<script type="text/javascript" src="jquery.object_utils.js" runat="client"></script>
+		<script type="text/javascript" src="jquery.remote.js" runat="both"></script>
+		<script src="jaxer-include/jquery.serverPagination.js" runat="server" ></script>
+		<script type="text/javascript" runat="server">
+			$(document).ready(function(){
+				var opts = {};
+				opts.definition = {'fieldDefinition': { title: '', text: ''} }; //for ActiveRecord.define	: 	
+				opts.randomText = {language: ''};
+				opts.randomText.params = { title: 15, text: 80};
+				opts.startpoints = 4;
+				opts.endpoints = 3;
+				
+				
+				$('#posts').serverPagination(opts); 
+				
+				$('#postts').serverPagination({'allpoints': true});
+				
+				$('#books').serverPagination();
+			});		
+		</script>
+		<script runat='server-proxy'>
+			
+			 
+			
+			function posts(offset, limit){
+				//Jaxer.load('../latest/active.js');	
+				ActiveRecord.connect(ActiveRecord.Adapters.JaxerSQLite);
+				var Post = ActiveRecord.define('posts',{title: '',text: ''});
+				Post.belongsTo('users');
+				return Post.find({all: true, order: 'id DESC', offset: offset, limit: limit });
+			}
+			
+			function postsById(postId){	
+				ActiveRecord.connect(ActiveRecord.Adapters.JaxerSQLite);
+				var Post = ActiveRecord.define('posts',{title: '',text: ''});
+				return  Post.find({ all: true, where: {id: postId} });
+			}
+			
+			function postts(offset, limit){
+				//Jaxer.load('../latest/active.js');	
+				ActiveRecord.connect(ActiveRecord.Adapters.JaxerSQLite);
+				var Post = ActiveRecord.define('postts',{title: '',text: ''});
+				return Post.find({all: true, order: 'id DESC', offset: offset, limit: limit });
+			}
+			
+			
+			function posttsById(postId){	
+				ActiveRecord.connect(ActiveRecord.Adapters.JaxerSQLite);
+				var Post = ActiveRecord.define('postts',{title: '',text: ''});
+				return  Post.find({ all: true, where: {id: postId} });
+			}
+
+			
+			function books(offset, limit){
+				//Jaxer.load('../latest/active.js');	
+				ActiveRecord.connect(ActiveRecord.Adapters.JaxerSQLite);
+				var Post = ActiveRecord.define('books',{name: '',author: ''});
+				Post.belongsTo('users');
+				return Post.find({all: true, order: 'id DESC', offset: offset, limit: limit });
+			}
+			
+			
+			function booksById(postId){	
+				ActiveRecord.connect(ActiveRecord.Adapters.JaxerSQLite);
+				var Post = ActiveRecord.define('books',{name: '',author: ''});
+				Post.belongsTo('users');
+				return  Post.find({ all: true, where: {id: postId} });
+			}
+			
+		
+
+		</script>
+		<script  src="jquery.transition.js" type="text/javascript" runat="client"></script>
+		<script  src="jquery.clientPagination.js" type="text/javascript" runat="client"></script>
+		<script  type="text/javascript" runat="client">						
+			$(document).ready(function(){
+				//target usage : $('.pagination').pagination($tpl_pager, $tpl_list, $tpl_item, pairs selector - value (db field), array paramNames );
+				$('#posts').clientPagination({'startpoints':4, 'endpoints': 3, 'tpl_pager': false, 'tpl_list': false, 'tpl_item': false,  'data': {'1': {'1': 'fieldName', '2': '.selector'}} });		
+				$('#postts').clientPagination({'allpoints': true, 'tpl_pager': false, 'tpl_list': false, 'tpl_item': false, 'transition': 'reversed', 'data': {'1': {'1': 'fieldName', '2': '.selector'}} });			
+				$('#books').clientPagination();
+			});			
+		</script>
+	</head>
+	<body>
+		<div id="col1">
+			<ul id="posts">
+				<li>
+					<h2 class="title"></h2>
+					<span class="text"></span>
+					<span class="mysterious"></span>
+					<span class="i"></span>
+					<span class="id"></span>
+				</li>
+			</ul>
+			<div class="ui-paginated-nav">
+				<div class="ui-pager">
+					<div>
+						<a href="index.html" class="previous">previous</a>
+						<span class="startpoints"></span>
+						<span class="endpoints"></span>
+						<a href="index.html" class="next">next</a>				
+					</div>
+					<div>
+						limit 
+						<span class="limit">
+							<a href="index.html?posts~limit=5">5</a>
+							<a href="index.html?posts~limit=10">10</a>
+							<a href="index.html?posts~limit=50">50</a>
+							<a href="index.html?posts~limit=100">100</a>
+						</span>
+						count <span class="count"></span>	
+					</div>
+
+				</div>
+			</div>	
+		</div>
+		<div id="col2">
+			<ul id="postts">
+				<li>
+					<h2 class="title"></h2>
+					<span class="text"></span>
+					<span class="mysterious"></span>
+					<span class="i"></span>
+					<span class="id"></span>
+				</li>
+			</ul>
+			
+			<div class="ui-paginated-nav">
+				<div class="ui-pager">
+					<div>
+						<a href="index.html" class="previous">previous</a>
+						<a href="index.html" class="next">next</a>						
+					</div>
+					<span class="allpoints"></span>
+					<div>
+						limit
+						<span class="limit">
+							<a href="index.html?postts~limit=5">5</a>
+							<a href="index.html?postts~limit=10">10</a>
+							<a href="index.html?postts~limit=50">50</a>
+							<a href="index.html?postts~limit=100">100</a>
+						</span>
+						total post count<span class="count"></span>						
+					</div>
+					<div>
+						<form class="limit">
+							<select>
+								<option value="index.html?postts~limit=2">2</option>
+								<option value="index.html?postts~limit=4">4</option>
+								<option value="index.html?postts~limit=6">6</option>								
+							</select>
+						</form>
+					</div>
+				</div>
+			</div>	
+		</div>
+		<div id="col3">
+			<ul id="books">
+				<li>
+					<h2 class="name"></h2>
+					<span class="author"></span>
+					<span class="i"></span>
+					<span class="id"></span>
+				</li>
+
+			</ul>
+			<div class="ui-paginated-nav">
+				<div class="ui-pager">
+					<div>
+						<a href="index.html" class="previous">previous</a>
+						<a href="index.html" class="next">next</a>
+					</div>
+					<div>
+						<span class="limit">
+							<a href="index.html?books~limit=5">5</a>
+							<a href="index.html?books~limit=10">10</a>
+							<a href="index.html?books~limit=15">15</a>
+						</span>
+						total post count<span class="count"></span>						
+					</div>
+				</div>
+			</div>
+		</div>
+	
+
+	</body>
+</html>
