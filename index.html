@@ -21,7 +21,6 @@
 	  	</style>
 		<script type="text/javascript" src="active.js" runat="both" autoload="true"></script>
 		<script type="text/javascript" src="jquery-1.3.2.js" runat="both"></script>
-		<script type="text/javascript" src="jquery.profile.js" runat="both" autoload="true"></script>
 		<script type="text/javascript" src="jquery.parseQuery.js" runat="both"></script>
 		<script type="text/javascript" src="jquery.parseUri.js" runat="both"></script>
 		<script type="text/javascript" src="jquery.domToSelector.js" runat="both"></script>
@@ -47,9 +46,6 @@
 			});		
 		</script>
 		<script runat='server-proxy'>
-			
-			 
-			
 			function posts(offset, limit){
 				//Jaxer.load('../latest/active.js');	
 				ActiveRecord.connect(ActiveRecord.Adapters.JaxerSQLite);
@@ -94,19 +90,25 @@
 				Post.belongsTo('users');
 				return  Post.find({ all: true, where: {id: postId} });
 			}
-			
-		
-
 		</script>
 		<script  src="jquery.transition.js" type="text/javascript" runat="client"></script>
 		<script  src="jquery.clientPagination.js" type="text/javascript" runat="client"></script>
 		<script  type="text/javascript" runat="client">						
 			$(document).ready(function(){
-				//target usage : $('.pagination').pagination($tpl_pager, $tpl_list, $tpl_item, pairs selector - value (db field), array paramNames );
-				$('#posts').clientPagination({'startpoints':4, 'endpoints': 3, 'tpl_pager': false, 'tpl_list': false, 'tpl_item': false,  'data': {'1': {'1': 'fieldName', '2': '.selector'}} });		
-				$('#postts').clientPagination({'allpoints': true, 'tpl_pager': false, 'tpl_list': false, 'tpl_item': false, 'transition': 'reversed', 'data': {'1': {'1': 'fieldName', '2': '.selector'}} });			
+				$('#posts').clientPagination({'startpoints':4, 'endpoints': 3});		
+				$('#postts').clientPagination({'allpoints': true,  'transition': 'reversed' });			
 				$('#books').clientPagination();
 			});			
+		</script>
+		<script type="text/javascript">
+			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script type="text/javascript">
+			try {
+				var pageTracker = _gat._getTracker("UA-10539006-1");
+				pageTracker._trackPageview();
+			} catch(err) {}
 		</script>
 	</head>
 	<body>
